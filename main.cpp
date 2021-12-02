@@ -36,6 +36,7 @@ tTenista jugarPunto(tTenista servicio, string nombre1, int habilidad1, int veloc
     int habilidad2, int velocidad2, tConteoGolpes golpes2, int& golpes_ganados2);
 tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int velocidad1, int& juegos1, tConteoGolpes golpes1, int& golpes_ganados1,
     string nombre2, int habilidad2, int velocidad2, int& juegos2, tConteoGolpes golpes2, int& golpes_ganados2);
+srand(time(NULL));		//Primero inicializamos los numeros aleatorios que vamos a usar en la función
 
 int main() {
     string nombre1, nombre2, marcador1, marcador2;
@@ -363,7 +364,7 @@ tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int veloc
 int golpeoBola(int posTen, int habilidad) {
     int golpeoBola(int posTen, int habilidad) {
 	int destBolDeseado = 0, destBolAlcanzado = 0, distancia, probAcierto, probReal, desvio;
-	srand(time(NULL));		//Primero inicializamos los numeros aleatorios que vamos a usar en la función
+	
 
 	if (MODO_DEBUG == true) {//si recibe los valores por teclado
 		cout << "Introduce el destino deseado de la bola: ";

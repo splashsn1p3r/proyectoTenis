@@ -361,31 +361,47 @@ tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int veloc
 
 
 int golpeoBola(int posTen, int habilidad) {
-    int destBolDeseado, destBolAlcanzado;
-    //primero inicializamos los numeros aleatorios que vamos a usar en la función
-    srand(time(NULL));
+    int golpeoBola(int posTen, int habilidad) {
+	int destBolDeseado = 0, destBolAlcanzado = 0, distancia, probAcierto, probReal, desvio;
+	srand(time(NULL));		//Primero inicializamos los numeros aleatorios que vamos a usar en la función
 
-    if (MODO_DEBUG) {//si NO recibe los valores por teclado
-        cin >> destBolDeseado;
-    }
-    else {// si recibe los valores por teclado
-        destBolDeseado = 1 + rand() % 7;
-    }
-    if (destBolDeseado <= habilidad) {//si tiene habilidad suficiente
-        destBolAlcanzado = destBolDeseado;
-    }
-    else {
-        // calcular la probabilidad de acierto si el jugador no tiene suficiente habilidad
-        int probAcierto = 100 - (((destBolDeseado - habilidad) / (ANCHO_PISTA - 1 - LIM_INF_HAB)) * 100);
-        int probReal = rand() % 100;
-        if (probAcierto < probReal) {
-            destBolAlcanzado = destBolDeseado;
-        }
-        else {
-            destBolAlcanzado = destBolDeseado - 1 + rand() % (1);
-        }
-    }
-    return destBolAlcanzado;
+	if (MODO_DEBUG == true) {//si recibe los valores por teclado
+		cout << "Introduce el destino deseado de la bola: ";
+		cin >> destBolDeseado;
+	}
+	else {// si recibe los valores por teclado
+		destBolDeseado = 1 + rand() % 7;
+		cout << "Destino aleatorio " << destBolDeseado << endl;
+	}
+
+	distancia = abs(destBolDeseado - habilidad);		//Calculamos distancia a recorrer
+	cout << "Distanica a recorrer " << distancia << endl;
+
+	if (distancia <= habilidad) {		//Si tiene habilidad suficiente
+		cout << "Suficiente habilidad. " << endl;
+		destBolAlcanzado = destBolDeseado;
+	}
+
+	else if (distancia > habilidad) {		//Calcular la probabilidad de acierto si el jugador no tiene suficiente habilidad
+		probAcierto = 100 - (((distancia - habilidad) / ((ANCHO_PISTA - 1) - LIM_INF_HAB)) * 100);
+		probReal = rand() % 100;
+		cout << "Probabilidad de acierto " << probAcierto << " y probabilidad real " << probReal << endl;
+		if (probAcierto > probReal) {
+			destBolAlcanzado = destBolDeseado;
+		}
+		else if(probAcierto < probReal){
+			desvio = rand() % 1;
+			if (desvio == 0) {
+				destBolAlcanzado = destBolDeseado - 1;
+			}
+			else if (desvio == 1) {
+				destBolAlcanzado = destBolDeseado + 1;
+			}
+		}
+	}
+	cout << "Destino final " << destBolAlcanzado;
+
+	return destBolAlcanzado;
 }
 
 int correTen(int posTen, int vel, int posBol) {

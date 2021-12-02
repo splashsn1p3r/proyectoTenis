@@ -30,8 +30,8 @@ int correTen(int posTen, int vel, int posBol); // arreglada
 void introducirTenista(string& iniciales, int& habilidad, int& velocidad); //HECHA Y FUNCIONAL
 void pintarMarcador(string nombre1, string nombre2, tPuntosJuego puntos1, tPuntosJuego puntos2, int juegos1, int juegos2, tTenista servicio_para);
 void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTenista bola_jugador, int pos_bola);
-tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPuntosJuego& puntos2, int& juegos1, int& juegos2);      //Hay que comprobarla pero en principio bien
-tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGolpes golpes, int& golpes_ganados, int velocidad, int& pos_recibe, int& pos_bola);
+tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPuntosJuego& puntos2, int& juegos1, int& juegos2);      //Comprobar
+tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGolpes golpes, int& golpes_ganados, int velocidad, int& pos_recibe, int& pos_bola); // he tocado alguna cosa no se como estara
 tTenista jugarPunto(tTenista servicio, string nombre1, int habilidad1, int velocidad1, tConteoGolpes golpes1, int& golpes_ganados1, string nombre2,
     int habilidad2, int velocidad2, tConteoGolpes golpes2, int& golpes_ganados2);
 tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int velocidad1, int& juegos1, tConteoGolpes golpes1, int& golpes_ganados1,
@@ -39,9 +39,11 @@ tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int veloc
 
 int main() {
     string nombre1, nombre2, marcador1, marcador2;
-    int hab1, hab2, vel1, vel2, empieza, puntos1 = 0, puntos2 = 0, posTen1 = 4, posTen2 = 4;
+    int hab1, hab2, vel1, vel2, empieza, posTen1 = 4, posTen2 = 4;
+    tPuntosJuego puntos1 = NADA, puntos2 = NADA;
     int posBola = 0, posTenGolp = 0, habTenGolp = 0, posTen = 0, velTen = 0;
     bool juego = false, turno1;
+    srand(time(NULL));        //Primero inicializamos los numeros aleatorios que vamos a usar en la función
 
     cout << "Bienvenido al simulador de partidos de tenis" << endl;
     cout << "Datos del tenista 1" << endl;
@@ -113,7 +115,7 @@ int main() {
                             turno1 = true;
                         }
                     }
-                    else {
+                    else { //hay que actualizar los marcadores
                         if (turno1) {
                             puntos1++;
                             posTenGolp = posTen2;
@@ -157,33 +159,9 @@ int main() {
             }
 
 
-            marcador1 = marcador(puntos1);      //Actualiza y enseña marcador
-            marcador2 = marcador(puntos2);
+            marcador1 = puntosAstring(puntos1);      //Actualiza y enseña marcador
+            marcador2 = puntosAstring(puntos2);
             // casos en los que no se produce ventaja
-            if (puntos1 == 4 && puntos2 < 3) {
-
-                cout << "El ganador del juego es " << nombre1;
-                juego = true;
-            }
-            else if (puntos2 == 4 && puntos1 < 3) {
-
-                cout << "El ganador del juego es " << nombre2;
-                juego = true;
-
-            }
-            // resto de casos
-            else {
-                //Casos en los que hay que jugar con ventaja
-                if ((puntos1 == 4 && puntos2 == 3) || (puntos2 == 4 && puntos1 == 3)) {
-
-                    // se comprueba que no haya que reducir la ventaja de uno de los jugadores
-                    if (puntos1 == 4 && puntos2 == 4) {
-                        puntos1 = 3;
-                        puntos2 = 3;
-                    }
-                }
-                cout << nombre1 << "  " << marcador1 << " - " << marcador2 << "  " << nombre2 << endl;
-            }
 
 
         }
@@ -195,6 +173,8 @@ int main() {
     return 0;
 }
 
+/*
+funcion que usabamos antes de puntos a String
 string marcador(int puntuacion) { //Muestra el marcador
     string res = "0";
     switch (puntuacion) {
@@ -217,6 +197,7 @@ string marcador(int puntuacion) { //Muestra el marcador
 
     return res;
 }
+*/
 
 string puntosAstring(tPuntosJuego puntuacion) {
     string res = "0";
@@ -253,7 +234,6 @@ void introducirTenista(string& iniciales, int& habilidad, int& velocidad) {
 
 tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPuntosJuego& puntos2, int& juegos1, int& juegos2) {
     tTenista gana = NADIE;
-
     if (ganador_punto == TENISTA1) {
         if (puntos1 = NADA) {
             puntos1 = QUINCE;
@@ -264,10 +244,10 @@ tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPunt
         else if (puntos1 == TREINTA) {
             puntos1 = CUARENTA;
         }
-        else if (puntos1 == CUARENTA && puntos2 == CUARENTA) {
+        else if (puntos1 == CUARENTA && puntos2 == CUARENTA) { //no usamos el switch para poder poner este caso en especifico en vez de ensuciar el case 40
             puntos1 = VENTAJA;
         }
-        else if (puntos1 == CUARENTA) {
+        else if (puntos1 == CUARENTA && puntos2 < TREINTA) {
             puntos1 = NADA;
             puntos2 = NADA;
             juegos1++;                      //Juego
@@ -291,7 +271,7 @@ tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPunt
         else if (puntos2 == CUARENTA && puntos1 == CUARENTA) {
             puntos1 = VENTAJA;
         }
-        else if (puntos2 == CUARENTA) {
+        else if (puntos2 == CUARENTA && puntos1 < TREINTA) {
             puntos2 = NADA;
             puntos1 = NADA;
             juegos2++;                      //Juego
@@ -314,13 +294,13 @@ tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPunt
 }
 
 void pintarMarcador(string nombre1, string nombre2, tPuntosJuego puntos1, tPuntosJuego puntos2, int juegos1, int juegos2, tTenista servicio_para) {
-    string puntos1, puntos2;
+    string p1String, p2String;
 
-    puntos1 = puntosAstring(puntos1);       //Duda
-    puntos2 = puntosAstring(puntos2);
+    p1String = puntosAstring(puntos1);       //Duda
+    p2String = puntosAstring(puntos2);
     if (servicio_para == TENISTA1) {
-        cout << nombre1 << " " << juegos1 << " : " << puntos1 << "*" << endl;           //Marcador si saca tenista 1
-        cout << nombre2 << " " << juegos2 << " : " << puntos2 << endl;
+        cout << nombre1 << " " << juegos1 << " : " << p1String << "*" << endl;           //Marcador si saca tenista 1
+        cout << nombre2 << " " << juegos2 << " : " << p2String << endl;
     }
     else if (servicio_para == TENISTA2) {                                               //Marcador si saca tenista 2
         cout << nombre1 << " " << juegos1 << " : " << puntos1 << endl;
@@ -335,8 +315,8 @@ void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTeni
 tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGolpes golpes, int& golpes_ganados, int velocidad, int& pos_recibe, int& pos_bola) {
     tTenista gana;
 
-    pos_bola = golpeoBola(/*posRemata*/, habilidad);                     //Terminar golpe
-    if (1 <= pos_bola <= 6) {
+    pos_bola = golpeoBola(pos_recibe, habilidad);                     //Terminar golpe
+    if (1 <= pos_bola <= 7) {
         pos_recibe = correTen(pos_recibe, velocidad, pos_bola);
     }
     return gana;
@@ -360,49 +340,46 @@ tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int veloc
 }
 
 
+
 int golpeoBola(int posTen, int habilidad) {
-    int golpeoBola(int posTen, int habilidad) {
-	int destBolDeseado = 0, destBolAlcanzado = 0, distancia, probAcierto, probReal, desvio;
-	srand(time(NULL));		//Primero inicializamos los numeros aleatorios que vamos a usar en la función
+        int destBolDeseado = 0, destBolAlcanzado = 0, distancia, probAcierto, probReal, desvio;
 
-	if (MODO_DEBUG == true) {//si recibe los valores por teclado
-		cout << "Introduce el destino deseado de la bola: ";
-		cin >> destBolDeseado;
-	}
-	else {// si recibe los valores por teclado
-		destBolDeseado = 1 + rand() % 7;
-		cout << "Destino aleatorio " << destBolDeseado << endl;
-	}
 
-	distancia = abs(destBolDeseado - habilidad);		//Calculamos distancia a recorrer
-	cout << "Distanica a recorrer " << distancia << endl;
+        if (MODO_DEBUG == true) {//si recibe los valores por teclado
+            cout << "Introduce el destino deseado de la bola: ";
+            cin >> destBolDeseado;
+        } else {// si recibe los valores por teclado
+            destBolDeseado = 1 + rand() % 7;
+            cout << "Destino aleatorio " << destBolDeseado << endl;
+        }
 
-	if (distancia <= habilidad) {		//Si tiene habilidad suficiente
-		cout << "Suficiente habilidad. " << endl;
-		destBolAlcanzado = destBolDeseado;
-	}
+        distancia = abs(destBolDeseado - habilidad);        //Calculamos distancia a recorrer
+        cout << "Distanica a recorrer " << distancia << endl;
 
-	else if (distancia > habilidad) {		//Calcular la probabilidad de acierto si el jugador no tiene suficiente habilidad
-		probAcierto = 100 - (((distancia - habilidad) / ((ANCHO_PISTA - 1) - LIM_INF_HAB)) * 100);
-		probReal = rand() % 100;
-		cout << "Probabilidad de acierto " << probAcierto << " y probabilidad real " << probReal << endl;
-		if (probAcierto > probReal) {
-			destBolAlcanzado = destBolDeseado;
-		}
-		else if(probAcierto < probReal){
-			desvio = rand() % 1;
-			if (desvio == 0) {
-				destBolAlcanzado = destBolDeseado - 1;
-			}
-			else if (desvio == 1) {
-				destBolAlcanzado = destBolDeseado + 1;
-			}
-		}
-	}
-	cout << "Destino final " << destBolAlcanzado;
+        if (distancia <= habilidad) {        //Si tiene habilidad suficiente
+            cout << "Suficiente habilidad. " << endl;
+            destBolAlcanzado = destBolDeseado;
+        } else if (distancia >
+                   habilidad) {        //Calcular la probabilidad de acierto si el jugador no tiene suficiente habilidad
+            probAcierto = 100 - (((distancia - habilidad) / ((ANCHO_PISTA - 1) - LIM_INF_HAB)) * 100);
+            probReal = rand() % 100;
+            cout << "Probabilidad de acierto " << probAcierto << " y probabilidad real " << probReal << endl;
+            if (probAcierto > probReal) {
+                destBolAlcanzado = destBolDeseado;
+            } else if (probAcierto < probReal) {
+                desvio = rand() % 1;
+                if (desvio == 0) {
+                    destBolAlcanzado = destBolDeseado - 1;
+                } else if (desvio == 1) {
+                    destBolAlcanzado = destBolDeseado + 1;
+                }
+            }
+        }
+        cout << "Destino final " << destBolAlcanzado;
 
-	return destBolAlcanzado;
-}
+        return destBolAlcanzado;
+    }
+
 
 int correTen(int posTen, int vel, int posBol) {
     int distancia;

@@ -435,11 +435,15 @@ tTenista jugarPunto(tTenista servicio, string nombre1, int habilidad1, int veloc
 
 tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int velocidad1, int& juegos1, tConteoGolpes golpes1, int& golpes_ganados1,
     string nombre2, int habilidad2, int velocidad2, int& juegos2, tConteoGolpes golpes2, int& golpes_ganados2) {
-    tTenista d;
+     tTenista gana = NADIE, ganaPunto = NADIE;
 
+    while (gana == NADIE) {
+        pintarMarcador(nombre1, nombre2, /*puntos1, puntos2*/, juegos1, juegos2, servicio);         //Y la variable de los puntos que?
+        ganaPunto = jugarPunto(servicio, nombre1, habilidad1, velocidad1, golpes1, golpes_ganados1, nombre2, habilidad2, velocidad2, golpes2, golpes_ganados2);
+        gana = actualizarMarcador(ganaPunto, /*puntos1, puntos2*/, juegos1, juegos2);
+    }
 
-
-    return d;
+    return gana;
 }
 
 

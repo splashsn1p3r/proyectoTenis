@@ -309,7 +309,89 @@ void pintarMarcador(string nombre1, string nombre2, tPuntosJuego puntos1, tPunto
 }
 
 void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTenista bola_jugador, int pos_bola) {
+    int i = 1, u = 1, cont = 0, v = 1, cont2 = 0, x = 1, p = 1, z = 1;
 
+    cout << "  ";
+    for (i = 1; i < ANCHO_PISTA +2; i++) {     //Tenista de arriba en su posicion
+         if (i != pos_t1) {
+             cout << "  ";
+         }
+         else {
+            cout << nombre1;
+         }
+    }
+    cout << endl;
+    cout << "  ";
+
+    for (u = 0; u < ANCHO_PISTA + 2; u++) {       //Linea de fondo
+        cout << " -";
+    }
+    cout << endl;
+    cout << "  ";
+
+    while (cont != LARGO_PISTA) {                                   //Campo tenista 1 
+        for (v = 1; v < ANCHO_PISTA + 4; v++) {
+            if (v != pos_bola) {       
+                cout << "| ";
+            }
+            else if (cont != 0) {
+                cout << "| ";
+            }
+            else if (pos_bola = v){
+                if (bola_jugador == TENISTA1) {
+                    cout << "|o";
+                }
+            }
+            else {
+                cout << "| ";
+            }
+        }
+        cout << endl;
+        cout << "  ";
+        cont++;
+    }
+
+    cout << "-1-2-3-4-5-6-7-8-9-" << endl;
+    cout << "  ";
+
+    while (cont2 != LARGO_PISTA) {                                   //Campo tenista 2
+        for (x = 1; x < ANCHO_PISTA + 4; x++) {
+            if (x != pos_bola) {
+                cout << "| ";
+            }
+            else if (cont2 != 2) {
+                cout << "| ";
+            }
+            else if (pos_bola = x) {
+                if (bola_jugador == TENISTA2) {
+                    cout << "|o";
+                }
+            }
+            else {
+                cout << "| ";
+            }
+        }
+        cout << endl;
+        cout << "  ";
+        cont2++;
+    }
+   
+
+    for (p = 1; p < ANCHO_PISTA + 3; p++) {       //Linea de fondo
+        cout << " -";
+    }
+    cout << endl;
+
+    cout << "  ";
+    for (z = 1; z < ANCHO_PISTA + 2; z++) {     //Tenista de abajo en su posicion
+        if (z != pos_t2) {
+            cout << "  ";
+        }
+        else {
+            cout << nombre2;
+        }
+    }
+    cout << endl;
 }
 
 tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGolpes golpes, int& golpes_ganados, int velocidad, int& pos_recibe, int& pos_bola) {

@@ -397,10 +397,31 @@ void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTeni
 tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGolpes golpes, int& golpes_ganados, int velocidad, int& pos_recibe, int& pos_bola) {
     tTenista gana;
 
-    pos_bola = golpeoBola(pos_recibe, habilidad);                     //Terminar golpe
-    if (1 <= pos_bola <= 7) {
+    pos_bola = golpeoBola(pos_recibe, habilidad);                     //No deberia darte la posicion del que lanza para esta funcion en vez de el que recive?
+    if (2 <= pos_bola <= 8) {
         pos_recibe = correTen(pos_recibe, velocidad, pos_bola);
+        if (pos_bola != pos_recibe) {                 //No llega a la pelota, punto
+            if (tenista_golpea == TENISTA1) {           //Fuera
+                gana = TENISTA1;
+            }
+            else {
+                gana = TENISTA2;
+            }
+        }
+        else if (pos_bola == pos_recibe) {          //Llega por lo tanto no gana nadie
+            gana = NADIE;
+        }
     }
+    else {
+        if (tenista_golpea == TENISTA1) {           //Fuera
+            gana = TENISTA2;
+        }
+        else {
+            gana = TENISTA1;
+        }
+    }
+    //Falta conteo de golpes que no encuentro como se hace (guardar en el array supongo)
+    
     return gana;
 }
 

@@ -20,23 +20,46 @@ const bool JUEGO_ALEATORIO = false;
 const bool MODO_DEBUG = false;
 const int DIM_ARRAY_GOLPES = ANCHO_PISTA + 2;
 const int JUEGOS_SET = 3;
+const int DIM_ARRAY_TENISTAS = 10;
 
 typedef enum { NADIE, TENISTA1, TENISTA2 }tTenista;
 typedef enum { NADA, QUINCE, TREINTA, CUARENTA, VENTAJA }tPuntosJuego;
 typedef int tConteoGolpes[DIM_ARRAY_GOLPES];
+struct tDatosPartido{
+    int posicion;
+    int juegos;
+    int golpes_ganadores;
+    tPuntosJuego puntos;
+    tConteoGolpes golpeos;
+};
+struct tDatosTenista{
+    string iniciales;
+    int habilidad;
+    int velocidad;
+    tDatosPartido datos_partido;
+    int partidos_ganados;
+    int partidos_perdidos;
+};
+typedef tDatosTenista tArrayDeTenistas[DIM_ARRAY_TENISTAS];
 
+int menu(); //Hecha, sin comprobar
 string puntosAstring(tPuntosJuego puntuacion);  //HECHA Y FUNCIONAL
 int golpeoBola(int posTen, int habilidad); //hecha, sin comprobar(creo que funciona)
 int correTen(int posTen, int vel, int posBol); // arreglada
 void inicializarConteos(tConteoGolpes golpeos);
 void mostrarEstadisticas(tTenista tenista, tConteoGolpes golpes, int aciertos, string nombre);
 void introducirTenista(string& iniciales, int& habilidad, int& velocidad); //HECHA Y FUNCIONAL
+// void pintarMarcador(string iniciales1, string iniciales2, const tDatosPartido &datos_t1, const tDatosPartido &datos_t2, tTenista servicio_para);
 void pintarMarcador(string nombre1, string nombre2, tPuntosJuego puntos1, tPuntosJuego puntos2, int juegos1, int juegos2, tTenista servicio_para);
 void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTenista bola_jugador, int pos_bola);
+// tTenista actualizarMarcador(tTenista ganador_punto, tDatosPartido &datos_t1, tDatosPartido &datos_t2);
 tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPuntosJuego& puntos2, int& juegos1, int& juegos2);      //Comprobar
+// tTenista lance(tTenista bola_para, tDatosTenista &tenista_golpea, tDatosTenista &tenista_recibe, int &pos_bola);
 tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGolpes golpes, int& golpes_ganados, int velocidad, int& pos_recibe, int& pos_bola); // he tocado alguna cosa no se como estara
-tTenista jugarPunto(tTenista servicio, string nombre1, int habilidad1, int velocidad1, tConteoGolpes golpes1, int& golpes_ganados1, string nombre2,
+//tTenista jugarPunto(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &tenista2);
+;tTenista jugarPunto(tTenista servicio, string nombre1, int habilidad1, int velocidad1, tConteoGolpes golpes1, int& golpes_ganados1, string nombre2,
     int habilidad2, int velocidad2, tConteoGolpes golpes2, int& golpes_ganados2);
+//tTenista jugarJuego(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &tenista2);
 tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int velocidad1, int& juegos1, tConteoGolpes golpes1, int& golpes_ganados1,
     string nombre2, int habilidad2, int velocidad2, int& juegos2, tConteoGolpes golpes2, int& golpes_ganados2);
 
@@ -105,7 +128,37 @@ string marcador(int puntuacion) { //Muestra el marcador
     return res;
 }
 */
+int menu(){
+    int op;
 
+    cout << "\033[5m, Juego de tenis: \033[0m," << endl;
+    cout << "[1] Ver datos tenistas" << endl;
+    cout << "[2] Nuevo tenista" << endl;
+    cout << "[3] Eliminar tenista" << endl;
+    cout << "[4] Jugar partido" << endl;
+    cout << "[5] Torneo semifinales/final" << endl;
+    cout << "[6] Torneo top-4" << endl;
+    cout << "[0] Salir" << endl << endl;
+    cout << "Opción: ";
+    cin >> op;
+
+    while (op < 0 || op > 6){
+        cout << "Opción no valida, por favor seleccione una opción correcta" << endl;
+
+        cout << "\033[5m, Juego de tenis: \033[0m," << endl;
+        cout << "[1] Ver datos tenistas" << endl;
+        cout << "[2] Nuevo tenista" << endl;
+        cout << "[3] Eliminar tenista" << endl;
+        cout << "[4] Jugar partido" << endl;
+        cout << "[5] Torneo semifinales/final" << endl;
+        cout << "[6] Torneo top-4" << endl;
+        cout << "[0] Salir" << endl << endl;
+        cout << "Opción: ";
+        cin >> op;
+    }
+
+    return op;
+}
 string puntosAstring(tPuntosJuego puntuacion) {
     string res = "0";
     switch (puntuacion) {
@@ -158,7 +211,7 @@ void mostrarEstadisticas(tTenista tenista, tConteoGolpes golpes, int aciertos, s
     cout << endl;
 }
 
-tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPuntosJuego& puntos2, int& juegos1, int& juegos2) {
+tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPuntosJuego& puntos2, int& juegos1, int& juegos2) { // tTenista actualizarMarcador(tTenista ganador_punto, tDatosPartido &datos_t1, tDatosPartido &datos_t2){
     tTenista gana = NADIE;
     if (ganador_punto == TENISTA1) {
         if (puntos1 == NADA) {
@@ -219,7 +272,7 @@ tTenista actualizarMarcador(tTenista ganador_punto, tPuntosJuego& puntos1, tPunt
     return gana;
 }
 
-void pintarMarcador(string nombre1, string nombre2, tPuntosJuego puntos1, tPuntosJuego puntos2, int juegos1, int juegos2, tTenista servicio_para) {
+void pintarMarcador(string nombre1, string nombre2, tPuntosJuego puntos1, tPuntosJuego puntos2, int juegos1, int juegos2, tTenista servicio_para) { //void pintarMarcador(string iniciales1, string iniciales2, const tDatosPartido &datos_t1, const tDatosPartido &datos_t2, tTenista servicio_para){
     string p1String, p2String;
 
     p1String = puntosAstring(puntos1);       //Duda
@@ -320,7 +373,7 @@ void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTeni
     cout << endl;
 }
 
-tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGolpes golpes, int& golpes_ganados, int velocidad, int& pos_recibe, int& pos_bola) {
+tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGolpes golpes, int& golpes_ganados, int velocidad, int& pos_recibe, int& pos_bola) { //tTenista lance(tTenista bola_para, tDatosTenista &tenista_golpea, tDatosTenista &tenista_recibe, int &pos_bola){
     tTenista gana = NADIE;
     cout << tenista_golpea << "Golpea la bola." << endl;
     pos_bola = golpeoBola(pos_bola, habilidad);                     //No deberia darte la posicion del que lanza para esta funcion en vez de el que recive?
@@ -353,7 +406,7 @@ tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGol
 }
 
 tTenista jugarPunto(tTenista servicio, string nombre1, int habilidad1, int velocidad1, tConteoGolpes golpes1,
-    int& golpes_ganados1, string nombre2, int habilidad2, int velocidad2, tConteoGolpes golpes2, int& golpes_ganados2) {
+    int& golpes_ganados1, string nombre2, int habilidad2, int velocidad2, tConteoGolpes golpes2, int& golpes_ganados2) {//tTenista jugarPunto(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &tenista2){
     tTenista gana = NADIE, bolaPara = servicio;
     int pos1 = ANCHO_PISTA / 2 + 1;
     int pos2 = pos1;
@@ -375,7 +428,7 @@ tTenista jugarPunto(tTenista servicio, string nombre1, int habilidad1, int veloc
 }
 
 tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int velocidad1, int& juegos1, tConteoGolpes golpes1, int& golpes_ganados1,
-    string nombre2, int habilidad2, int velocidad2, int& juegos2, tConteoGolpes golpes2, int& golpes_ganados2) {
+    string nombre2, int habilidad2, int velocidad2, int& juegos2, tConteoGolpes golpes2, int& golpes_ganados2) { //tTenista jugarJuego(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &tenista2){
      tTenista gana = NADIE, ganaPunto = NADIE;
     tPuntosJuego puntos1 = NADA, puntos2 = NADA;
     while (gana == NADIE) {

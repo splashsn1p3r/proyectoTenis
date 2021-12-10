@@ -7,6 +7,7 @@
 // tip para usar los numeros aleatorios: variable = limite_inferior + rand() % (limite_superior +1 - limite_inferior) ;
 #include <string>
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ const bool MODO_DEBUG = false;
 const int DIM_ARRAY_GOLPES = ANCHO_PISTA + 2;
 const int JUEGOS_SET = 3;
 const int DIM_ARRAY_TENISTAS = 10;
+const string ARCHIVO = "tenista.txt";
 
 typedef enum { NADIE, TENISTA1, TENISTA2 }tTenista;
 typedef enum { NADA, QUINCE, TREINTA, CUARENTA, VENTAJA }tPuntosJuego;
@@ -62,11 +64,15 @@ tTenista lance(tTenista tenista_golpea, string nombre, int habilidad, tConteoGol
 //tTenista jugarJuego(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &tenista2);
 tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int velocidad1, int& juegos1, tConteoGolpes golpes1, int& golpes_ganados1,
     string nombre2, int habilidad2, int velocidad2, int& juegos2, tConteoGolpes golpes2, int& golpes_ganados2);
+int cargar(tArrayDeTenistas &lista); // usamos una funcion int en vez de un void porque así la aprovechamos y ademas de cargar todos los datos del fichero nos devolvera el número de tenistas que hay en el juego que nos servira para después poderlo usar para acceder al array correctamente
+int buscarIniciales(const tArrayDeTenistas &lista, string ini, const int numTenista); //Hecha sin comprobar
 
 int main() {
-    string nombre1, nombre2, marcador1, marcador2;
-    int hab1, hab2, vel1, vel2, juegos1 = 0, juegos2 = 0;
-    int golpes_ganadores1 = 0, golpes_ganadores2 = 0;
+    string nombre1, nombre2, marcador1, marcador2;// variables que probablemente se eliminen porque ahora se usa un array
+    int hab1, hab2, vel1, vel2, juegos1 = 0, juegos2 = 0; // variables que probablemente se eliminen porque ahora se usa un array
+    int golpes_ganadores1 = 0, golpes_ganadores2 = 0;// variables que probablementye se eliminen porque ahora se usa un array
+    tArrayDeTenistas lista;
+    int opcion, numTenistas = cargar(lista);
 
     tTenista ganador_set = NADIE, servicio_para;
     tConteoGolpes golpeos1,golpeos2;
@@ -74,9 +80,39 @@ int main() {
     inicializarConteos(golpeos1);
     inicializarConteos(golpeos2);
 
+    cout << "Bienvenido al simulador de partidos de tenis" << endl;
     servicio_para = tTenista(rand() % 2 + 1);
     introducirTenista(nombre1,hab1, vel1);
     introducirTenista(nombre2, hab2, vel2);
+    opcion = menu();
+    while (opcion != 0) {
+        switch (opcion) {
+            case 1:
+
+                break;
+            case 2:
+                if (numTenistas < DIM_ARRAY_TENISTAS) {
+                    introducirTenista(lista[numTenistas].iniciales, lista[numTenistas].habilidad,
+                                      lista[numTenistas].velocidad);
+                    numTenistas++;
+                }
+                else{
+                    cout << "ERROR : No se pueden añadir más tenistas, memoria llena" << endl;
+                }
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+        }
+        opcion = menu();
+    }
+    cout << "Programa finalizado" << endl;
+
 
     while (ganador_set == NADIE){
         tTenista ganadorPunto = NADIE;
@@ -182,14 +218,15 @@ string puntosAstring(tPuntosJuego puntuacion) {
 }
 
 void introducirTenista(string& iniciales, int& habilidad, int& velocidad) {
-    cout << "Bienvenido al simulador de partidos de tenis" << endl;
+
     cout << "Datos del tenista" << endl;
     cout << "Introduce sus iniciales: ";
     cin >> iniciales;
-    cout << "Introduzca su habilidad (1 o 2): ";
+    cout << "Introduzca su habilidad (1 al 3): ";
     cin >> habilidad;
-    cout << "Introduzca su velocidad (1 al 3): ";
+    cout << "Introduzca su velocidad (1 al 4): ";
     cin >> velocidad;
+    cout << "Tenista creado con éxito";
 }
 void mostrarEstadisticas(tTenista tenista, tConteoGolpes golpes, int aciertos, string nombre){
     int a = 0;
@@ -509,4 +546,38 @@ void inicializarConteos(tConteoGolpes golpeos){
     for (int i = 0; i < DIM_ARRAY_GOLPES; i++){
         golpeos[i] = 0;
     }
+}
+
+int cargar(tArrayDeTenistas &lista){
+    int numTenistas = 0;
+    ifstream archivo(ARCHIVO);
+    if(archivo.is_open()){
+        while (!archivo.eof() && numTenistas < DIM_ARRAY_TENISTAS){
+            archivo >> lista[numTenistas].iniciales;
+            archivo >> lista[numTenistas].habilidad;
+            archivo >> lista[numTenistas].velocidad;
+            archivo >> lista[numTenistas].partidos_ganados;
+            archivo >> lista[numTenistas].partidos_perdidos;
+            numTenistas++;
+        }
+
+        archivo.close();
+    }
+    else{
+        cout << "ERROR al abrir el archivo" << endl;
+    }
+    return numTenistas;
+}
+int buscarIniciales(const tArrayDeTenistas &lista, string ini, const int numTenista){
+    int pos = 0;
+    bool encontrado = false;
+
+    while (!encontrado && pos <= numTenista){
+        if(ini == lista[pos].iniciales){
+            encontrado = true;
+        }
+        pos++;
+    }
+    return pos;
+
 }

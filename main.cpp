@@ -66,6 +66,8 @@ tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int veloc
     string nombre2, int habilidad2, int velocidad2, int& juegos2, tConteoGolpes golpes2, int& golpes_ganados2);
 int cargar(tArrayDeTenistas &lista); // usamos una funcion int en vez de un void porque así la aprovechamos y ademas de cargar todos los datos del fichero nos devolvera el número de tenistas que hay en el juego que nos servira para después poderlo usar para acceder al array correctamente
 int buscarIniciales(const tArrayDeTenistas &lista, string ini, const int numTenista); //Hecha sin comprobar
+void guardar(tArrayDeTenistas &lista);
+void mostrar(const tArrayDeTenistas &lista);
 
 int main() {
     string nombre1, nombre2, marcador1, marcador2;// variables que probablemente se eliminen porque ahora se usa un array
@@ -82,8 +84,6 @@ int main() {
 
     cout << "Bienvenido al simulador de partidos de tenis" << endl;
     servicio_para = tTenista(rand() % 2 + 1);
-    introducirTenista(nombre1,hab1, vel1);
-    introducirTenista(nombre2, hab2, vel2);
     opcion = menu();
     while (opcion != 0) {
         switch (opcion) {
@@ -234,14 +234,14 @@ void mostrarEstadisticas(tTenista tenista, tConteoGolpes golpes, int aciertos, s
         a = a + golpes[i];
     }
     cout << "Estadisticas de " << nombre << endl;
-    cout << setw(3) << "Golpes Totales: " << a << endl;
-    cout << setw(3) << "Golpes Ganadores: " << aciertos << endl;
-    cout << setw(3) << "Errores no forzadose: " << golpes[DIM_ARRAY_GOLPES - 1] << endl;
-    cout << setw(6) << "Calle: ";
+    cout << setw(20) << "Golpes Totales: " << a << endl;
+    cout << setw(22) << "Golpes Ganadores: " << aciertos << endl;
+    cout << setw(26) << "Errores no forzadose: " << golpes[DIM_ARRAY_GOLPES - 1] << endl;
+    cout << setw(9) << "Calle: ";
     for (int i = 0; i < 9; i++){
         cout << setw(5) << i;
     }
-    cout << endl << setw(9) << "%";
+    cout << endl << setw(12) << "%";
     for (int i = 0; i < DIM_ARRAY_GOLPES; i++){
         cout << setw(5) << golpes[i]/a * 100;
     }
@@ -569,15 +569,31 @@ int cargar(tArrayDeTenistas &lista){
     return numTenistas;
 }
 int buscarIniciales(const tArrayDeTenistas &lista, string ini, const int numTenista){
-    int pos = 0;
+    int pos = -1;
     bool encontrado = false;
 
-    while (!encontrado && pos <= numTenista){
+    while (!encontrado && pos < numTenista){
+        pos++;
         if(ini == lista[pos].iniciales){
             encontrado = true;
         }
-        pos++;
+    }
+    if (!encontrado){
+        pos = -1;
     }
     return pos;
+
+}
+void guardar(tArrayDeTenistas &lista){
+    ofstream archivo(ARCHIVO);
+    if(archivo.is_open()){
+
+        archivo.close();
+    }
+    else{
+        cout << "ERROR al abrir el archivo." << endl;
+    }
+}
+void mostrar(const tArrayDeTenistas &listaT){
 
 }

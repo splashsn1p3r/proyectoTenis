@@ -66,7 +66,7 @@ tTenista jugarJuego(tTenista servicio, string nombre1, int habilidad1, int veloc
     string nombre2, int habilidad2, int velocidad2, int& juegos2, tConteoGolpes golpes2, int& golpes_ganados2);
 int cargar(tArrayDeTenistas &lista); // usamos una funcion int en vez de un void porque así la aprovechamos y ademas de cargar todos los datos del fichero nos devolvera el número de tenistas que hay en el juego que nos servira para después poderlo usar para acceder al array correctamente
 int buscarIniciales(const tArrayDeTenistas &lista, string ini, const int numTenista); //Hecha sin comprobar
-void guardar(const tArrayDeTenistas &lista,const int numTenista);
+void guardar(tArrayDeTenistas &lista);
 void mostrar(const tArrayDeTenistas &lista);
 
 int main() {
@@ -584,16 +584,10 @@ int buscarIniciales(const tArrayDeTenistas &lista, string ini, const int numTeni
     return pos;
 
 }
-void guardar(const tArrayDeTenistas &lista, const int numTenistas){
+void guardar(tArrayDeTenistas &lista){
     ofstream archivo(ARCHIVO);
     if(archivo.is_open()){
-        for (int i = 0; i < numTenistas; i++){
-            cout << lista[numTenistas].iniciales << " ";
-            cout << lista[numTenistas].habilidad << " ";
-            cout << lista[numTenistas].velocidad << " ";
-            cout << lista[numTenistas].partidos_ganados << " ";
-            cout << lista[numTenistas].partidos_perdidos << endl;
-        }
+
         archivo.close();
     }
     else{

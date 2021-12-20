@@ -412,17 +412,20 @@ void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTeni
 
 tTenista lance(tTenista bola_para, tDatosTenista& tenista_golpea, tDatosTenista& tenista_recibe, int& pos_bola) {
     tTenista gana = NADIE;
-    cout << tenista_golpea << "Golpea la bola." << endl;
-    pos_bola = golpeoBola(pos_bola, tenista_golpea.habilidad);                     //No deberia darte la posicion del que lanza para esta funcion en vez de el que recive?
-    //golpes[pos_bola] = golpes[pos_bola] + 1;
+
+    cout << tenista_golpea.iniciales << "Golpea la bola." << endl;
+    pos_bola = golpeoBola(pos_bola, tenista_golpea.habilidad);                     
+    
     if (1 <= pos_bola && pos_bola <= 7) {
         tenista_recibe.datos_partido.posicion = correTen(tenista_recibe.datos_partido.posicion, tenista_recibe.velocidad, pos_bola);
         if (pos_bola != tenista_recibe.datos_partido.posicion) {                 //No llega a la pelota, punto
-            if (tenista_golpea == TENISTA1) {           //Fuera
+            if (bola_para == TENISTA1) {           
                 gana = TENISTA1;
+                tenista_golpea.datos_partido.golpes_ganadores++;
             }
             else {
                 gana = TENISTA2;
+                tenista_golpea.datos_partido.golpes_ganadores++;
             }
         }
         else if (pos_bola == tenista_recibe.datos_partido.posicion){          //Llega por lo tanto no gana nadie
@@ -430,14 +433,14 @@ tTenista lance(tTenista bola_para, tDatosTenista& tenista_golpea, tDatosTenista&
         }
     }
     else {
-        if (tenista_golpea == TENISTA1) {           //Fuera
+        if (bola_para == TENISTA1) {           //Fuera
             gana = TENISTA2;
         }
         else {
             gana = TENISTA1;
         }
     }
-    //Falta conteo de golpes que no encuentro como se hace (guardar en el array supongo)
+    
 
     return gana;
 }

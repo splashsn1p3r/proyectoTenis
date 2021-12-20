@@ -658,6 +658,15 @@ tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2) {
             gana = TENISTA2;
         }
     }
+    
+    if (gana == TENISTA1) {
+        tenista1.partidos_ganados++;
+        tenista2.partidos_perdidos++;
+    }
+    else if (gana == TENISTA2) {
+        tenista2.partidos_ganados++;
+        tenista1.partidos_perdidos++;
+    }
 
     return gana;
 }

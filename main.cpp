@@ -65,6 +65,7 @@ int buscarIniciales(const tArrayDeTenistas& listaT, string ini);
 void eliminarTenista(tArrayDeTenistas& listaT, string iniciales);
 void introducirTenista(tArrayDeTenistas& listaT);
 tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2);
+void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int indT4);
 
 int main() {
     string nombre1, nombre2, marcador1, marcador2;// variables que probablemente se eliminen porque ahora se usa un array
@@ -674,3 +675,77 @@ tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2) {
     return gana;
 }
 
+void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int indT4) {
+    tDatosTenista tenista1 = listaT[indT1], tenista2 = listaT[indT2], tenista3 = listaT[indT3], tenista4 = listaT[indT4];
+    tTenista semi1 = NADIE, semi2 = NADIE, final = NADIE;
+
+    //Semis 
+    semi1 = jugarPartido(tenista1, tenista4);
+    semi2 = jugarPartido(tenista2, tenista3);
+
+    //Final dependiendo de las semis
+    if (semi1 == TENISTA1 && semi2 == TENISTA1) {
+        final = jugarPartido(tenista1, tenista2);
+        tenista1.partidos_ganados++;
+        tenista2.partidos_ganados++;
+        tenista3.partidos_perdidos++;
+        tenista4.partidos_perdidos++;
+
+        if (final = TENISTA1) {
+            tenista1.partidos_ganados++;
+            tenista2.partidos_perdidos++;
+        }
+        else if (final = TENISTA2) {
+            tenista2.partidos_ganados++;
+            tenista1.partidos_perdidos++;
+        }
+    }
+    else if (semi1 == TENISTA1 && semi2 == TENISTA2) {
+        final = jugarPartido(tenista1, tenista3);
+        tenista1.partidos_ganados++;
+        tenista3.partidos_ganados++;
+        tenista2.partidos_perdidos++;
+        tenista4.partidos_perdidos++;
+
+        if (final = TENISTA1) {
+            tenista1.partidos_ganados++;
+            tenista3.partidos_perdidos++;
+        }
+        else if (final = TENISTA2) {
+            tenista3.partidos_ganados++;
+            tenista1.partidos_perdidos++;
+        }
+    }
+    else if (semi1 == TENISTA2 && semi2 == TENISTA1) {
+        final = jugarPartido(tenista4, tenista2);
+        tenista4.partidos_ganados++;
+        tenista2.partidos_ganados++;
+        tenista3.partidos_perdidos++;
+        tenista1.partidos_perdidos++;
+
+        if (final = TENISTA1) {
+            tenista4.partidos_ganados++;
+            tenista2.partidos_perdidos++;
+        }
+        else if (final = TENISTA2) {
+            tenista2.partidos_ganados++;
+            tenista4.partidos_perdidos++;
+        }
+    }
+    else if (semi1 == TENISTA2 && semi2 == TENISTA2) {
+        final = jugarPartido(tenista4, tenista3);
+        tenista4.partidos_ganados++;
+        tenista3.partidos_ganados++;
+        tenista2.partidos_perdidos++;
+        tenista1.partidos_perdidos++;
+
+        if (final = TENISTA1) {
+            tenista4.partidos_ganados++;
+            tenista3.partidos_perdidos++;
+        }
+        else if (final = TENISTA2) {
+            tenista3.partidos_ganados++;
+            tenista4.partidos_perdidos++;
+        }
+    }
+}

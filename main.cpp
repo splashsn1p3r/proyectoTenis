@@ -64,6 +64,7 @@ void mostrarIniciales(const tArrayDeTenistas& listaT);
 int buscarIniciales(const tArrayDeTenistas& listaT, string ini);
 void eliminarTenista(tArrayDeTenistas& listaT, string iniciales);
 void introducirTenista(tArrayDeTenistas& listaT);
+tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2);
 
 int main() {
     string nombre1, nombre2, marcador1, marcador2;// variables que probablemente se eliminen porque ahora se usa un array
@@ -627,5 +628,37 @@ void eliminarTenista(tArrayDeTenistas& listaT, string iniciales) {
 
 void introducirTenista(tArrayDeTenistas& listaT) {
 
+}
+
+tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2) {
+    tTenista gana = NADIE, jugar, servi;
+    int juegos1 = 0, juegos2 = 0, servicio;
+
+    while (gana = NADIE) {         //Mientras no llegue ninguno a 2 set se jugarJuego
+
+        servicio = rand() % 1;      //Sorteo de saque
+        if (servicio == 0) {
+            servi = TENISTA1;
+        }
+        else if (servicio == 1) {
+            servi = TENISTA2;
+        }
+
+        jugar = jugarJuego(servi, tenista1, tenista2);
+        if (jugar = TENISTA1) {
+            juegos1++;
+        }
+        else if (jugar = TENISTA2) {
+            juegos2++;
+        }
+        if (juegos1 == 2) {
+            gana = TENISTA1;
+        }
+        else if (juegos2 == 2) {
+            gana = TENISTA2;
+        }
+    }
+
+    return gana;
 }
 

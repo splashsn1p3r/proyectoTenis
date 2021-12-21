@@ -786,16 +786,16 @@ void seleccionarTop4(const tArrayDeTenistas& listaT, int& indT1, int& indT2, int
 
     for (k = 0; k < DIM_ARRAY_TENISTAS; k++) {          //Comparamos y sacamos las posiciones del array listaT
         if (listaT[k].partidos_ganados == n1) {
-            indT1 = n1;
+            indT1 = k;
         }
         else if (listaT[k].partidos_ganados == n2) {
-            indT2 = n2;
+            indT2 = k;
         }
         else if (listaT[k].partidos_ganados == n3) {
-            indT3 = n3;
+            indT3 = k;
         }
         else if (listaT[k].partidos_ganados == n4) {
-            indT4 = n4;
+            indT4 = k;
         }
     }
     cout << "1. " << listaT[indT1].iniciales << " con " << n1 << " victorias." << endl;

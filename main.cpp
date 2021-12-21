@@ -66,6 +66,7 @@ void eliminarTenista(tArrayDeTenistas& listaT, string iniciales);
 void introducirTenista(tArrayDeTenistas& listaT);
 tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2);
 void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int indT4);
+void seleccionarTop4(const tArrayDeTenistas& listaT, int& indT1, int& indT2, int& indT3, int& indT4);
 
 int main() {
     string nombre1, nombre2, marcador1, marcador2;// variables que probablemente se eliminen porque ahora se usa un array
@@ -73,6 +74,7 @@ int main() {
     int golpes_ganadores1 = 0, golpes_ganadores2 = 0;// variables que probablementye se eliminen porque ahora se usa un array
     tArrayDeTenistas lista;
     int opcion, numTenistas = cargar(lista);
+    tDatosTenista tenista1, tenista2;
 
     tTenista ganador_set = NADIE, servicio_para;
     tConteoGolpes golpeos1, golpeos2;
@@ -111,11 +113,10 @@ int main() {
     }
     cout << "Programa finalizado" << endl;
 
-
     while (ganador_set == NADIE) {
         tTenista ganadorPunto = NADIE;
         cout << "Servicio para: " << servicio_para;
-        ganadorPunto = jugarPunto(servicio_para, nombre1, hab1, vel1, golpeos1, golpes_ganadores1, nombre2, hab2, vel2, golpeos2, golpes_ganadores2);
+        ganadorPunto = jugarPunto(servicio_para, tenista1, tenista2);
         if (ganadorPunto == TENISTA1) {
             juegos1++;
             cout << nombre1 << "Ha ganado el punto." << endl;
@@ -413,6 +414,7 @@ void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTeni
 
 tTenista lance(tTenista bola_para, tDatosTenista& tenista_golpea, tDatosTenista& tenista_recibe, int& pos_bola) {
     tTenista gana = NADIE;
+    int i = 0;
 
     cout << tenista_golpea.iniciales << "Golpea la bola." << endl;
     pos_bola = golpeoBola(pos_bola, tenista_golpea.habilidad);                     
@@ -441,7 +443,6 @@ tTenista lance(tTenista bola_para, tDatosTenista& tenista_golpea, tDatosTenista&
             gana = TENISTA1;
         }
     }
-    
 
     return gana;
 }
@@ -613,17 +614,29 @@ void guardar(const tArrayDeTenistas& lista, const int numTenistas) {
 }
 
 void mostrar(const tArrayDeTenistas& listaT) {
+    
 
 }
 
 void mostrarIniciales(const tArrayDeTenistas& listaT) {
+    int i = 0;
 
+    cout << "INI" << endl;
+    for (i = 0; i < DIM_ARRAY_TENISTAS; i++) {
+        cout << listaT[i].iniciales << endl;
+    }
 }
 
 int buscarIniciales(const tArrayDeTenistas& listaT, string ini) {
-    int d;
+    int pos = -1, i = 0;
 
-    return d;
+    for (i = 0; i < DIM_ARRAY_TENISTAS; i++) {
+        if (listaT[i].iniciales == ini) {
+            pos = i;
+        }
+    }
+
+    return pos;
 }
 
 void eliminarTenista(tArrayDeTenistas& listaT, string iniciales) {
@@ -638,21 +651,21 @@ tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2) {
     tTenista gana = NADIE, jugar, servi;
     int juegos1 = 0, juegos2 = 0, servicio;
 
-    while (gana = NADIE) {         //Mientras no llegue ninguno a 2 set se jugarJuego
+    while (gana == NADIE) {         //Mientras no llegue ninguno a 2 set se jugarJuego
 
         servicio = rand() % 1;      //Sorteo de saque
         if (servicio == 0) {
-            servi = TENISTA1;
+            servi == TENISTA1;
         }
         else if (servicio == 1) {
             servi = TENISTA2;
         }
 
         jugar = jugarJuego(servi, tenista1, tenista2);
-        if (jugar = TENISTA1) {
+        if (jugar == TENISTA1) {
             juegos1++;
         }
-        else if (jugar = TENISTA2) {
+        else if (jugar == TENISTA2) {
             juegos2++;
         }
         if (juegos1 == 2) {
@@ -662,7 +675,7 @@ tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2) {
             gana = TENISTA2;
         }
     }
-    
+
     if (gana == TENISTA1) {
         tenista1.partidos_ganados++;
         tenista2.partidos_perdidos++;
@@ -680,10 +693,13 @@ void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int 
     tTenista semi1 = NADIE, semi2 = NADIE, final = NADIE;
 
     //Semis 
+    cout << "Semifinal 1: " << tenista1.iniciales << " vs " << tenista4.iniciales << endl;
+    cout << "Semifinal 2: " << tenista2.iniciales << " vs " << tenista3.iniciales << endl;
     semi1 = jugarPartido(tenista1, tenista4);
     semi2 = jugarPartido(tenista2, tenista3);
 
     //Final dependiendo de las semis
+    cout << "GRAN FINAL" << endl;
     if (semi1 == TENISTA1 && semi2 == TENISTA1) {
         final = jugarPartido(tenista1, tenista2);
         tenista1.partidos_ganados++;
@@ -691,11 +707,11 @@ void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int 
         tenista3.partidos_perdidos++;
         tenista4.partidos_perdidos++;
 
-        if (final = TENISTA1) {
+        if (final == TENISTA1) {
             tenista1.partidos_ganados++;
             tenista2.partidos_perdidos++;
         }
-        else if (final = TENISTA2) {
+        else if (final == TENISTA2) {
             tenista2.partidos_ganados++;
             tenista1.partidos_perdidos++;
         }
@@ -707,11 +723,11 @@ void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int 
         tenista2.partidos_perdidos++;
         tenista4.partidos_perdidos++;
 
-        if (final = TENISTA1) {
+        if (final == TENISTA1) {
             tenista1.partidos_ganados++;
             tenista3.partidos_perdidos++;
         }
-        else if (final = TENISTA2) {
+        else if (final == TENISTA2) {
             tenista3.partidos_ganados++;
             tenista1.partidos_perdidos++;
         }
@@ -723,11 +739,11 @@ void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int 
         tenista3.partidos_perdidos++;
         tenista1.partidos_perdidos++;
 
-        if (final = TENISTA1) {
+        if (final == TENISTA1) {
             tenista4.partidos_ganados++;
             tenista2.partidos_perdidos++;
         }
-        else if (final = TENISTA2) {
+        else if (final == TENISTA2) {
             tenista2.partidos_ganados++;
             tenista4.partidos_perdidos++;
         }
@@ -739,13 +755,51 @@ void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int 
         tenista2.partidos_perdidos++;
         tenista1.partidos_perdidos++;
 
-        if (final = TENISTA1) {
+        if (final == TENISTA1) {
             tenista4.partidos_ganados++;
             tenista3.partidos_perdidos++;
         }
-        else if (final = TENISTA2) {
+        else if (final == TENISTA2) {
             tenista3.partidos_ganados++;
             tenista4.partidos_perdidos++;
         }
     }
+}
+
+void seleccionarTop4(const tArrayDeTenistas& listaT, int& indT1, int& indT2, int& indT3, int& indT4) {
+    int i = 0, j = 0, k = 0, aux[DIM_ARRAY_TENISTAS + 1], m, n1, n2, n3, n4;
+    
+    for (i = 0; i < DIM_ARRAY_TENISTAS; i++) {      //Metemos los valores en el array auxiliar
+        aux[i] = listaT[i].partidos_ganados;
+    }
+    for (j = 0; j < DIM_ARRAY_TENISTAS; i++) {       //Ordenamos de mayor a menor el array con los partidos ganados y sacamos los 4 primeros valores que seran los mas altos
+        if (aux[i] < aux[i + 1]) {
+            m = aux[i];
+            aux[i] = aux[i + 1];
+            aux[i + 1] = m;
+        }
+    }
+    n1 = aux[1];
+    n2 = aux[2];
+    n3 = aux[3];
+    n4 = aux[4];
+
+    for (k = 0; k < DIM_ARRAY_TENISTAS; k++) {          //Comparamos y sacamos las posiciones del array listaT
+        if (listaT[k].partidos_ganados == n1) {
+            indT1 = n1;
+        }
+        else if (listaT[k].partidos_ganados == n2) {
+            indT2 = n2;
+        }
+        else if (listaT[k].partidos_ganados == n3) {
+            indT3 = n3;
+        }
+        else if (listaT[k].partidos_ganados == n4) {
+            indT4 = n4;
+        }
+    }
+    cout << "1. " << listaT[indT1].iniciales << " con " << n1 << " victorias." << endl;
+    cout << "2. " << listaT[indT2].iniciales << " con " << n2 << " victorias." << endl;
+    cout << "3. " << listaT[indT3].iniciales << " con " << n3 << " victorias." << endl;
+    cout << "4. " << listaT[indT4].iniciales << " con " << n4 << " victorias." << endl;
 }

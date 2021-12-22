@@ -892,10 +892,10 @@ void seleccionarTop4(const tArrayDeTenistas& listaT, int& indT1, int& indT2, int
             aux[i + 1] = m;
         }
     }
-    n1 = aux[1];
-    n2 = aux[2];
-    n3 = aux[3];
-    n4 = aux[4];
+    n1 = aux[0];
+    n2 = aux[1];
+    n3 = aux[2];
+    n4 = aux[3];
 
     for (k = 0; k < DIM_ARRAY_TENISTAS; k++) {          //Comparamos y sacamos las posiciones del array listaT
         if (listaT[k].partidos_ganados == n1) {

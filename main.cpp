@@ -59,7 +59,7 @@ tTenista jugarJuego(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &t
 int cargar(tArrayDeTenistas& lista); // usamos una funcion int en vez de un void porque así la aprovechamos y ademas de cargar todos los datos del fichero nos devolvera el número de tenistas que hay en el juego que nos servira para después poderlo usar para acceder al array correctamente
 int buscarIniciales(const tArrayDeTenistas& lista, string ini, const int numTenista); //Hecha sin comprobar
 void guardar(const tArrayDeTenistas& lista, const int numTenista);
-void mostrar(const tArrayDeTenistas& lista);
+void mostrar(const tArrayDeTenistas& lista, const int numTenista);
 void mostrarIniciales(const tArrayDeTenistas& listaT, const int numTenistas);
 void eliminarTenista(tArrayDeTenistas& listaT, string iniciales, int& numTenistas);
 void introducirTenista(tArrayDeTenistas& listaT, int& numTenistas);
@@ -87,7 +87,7 @@ int main() {
         switch (opcion) {
 
             case 1:
-                mostrar(lista);
+                mostrar(lista, numTenistas);
                 break;
             case 2:
                 if (numTenistas < DIM_ARRAY_TENISTAS) {
@@ -518,13 +518,11 @@ tTenista lance(tTenista bola_para, tDatosTenista& tenista_golpea, tDatosTenista&
 
 tTenista jugarPunto(tTenista servicio, tDatosTenista& tenista1, tDatosTenista& tenista2) {//tTenista jugarPunto(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &tenista2){
     tTenista gana = NADIE, bolaPara = servicio;
-    int pos1 = ANCHO_PISTA / 2 + 1;
-    int pos2 = pos1;
+    tenista1.datos_partido.posicion = 5;
+    tenista2.datos_partido.posicion = 5;
     int posBola = 0;
 
-    posBola = (servicio == TENISTA1) ? pos1 : pos2;
-    tenista1.datos_partido.posicion = pos1;
-    tenista2.datos_partido.posicion = pos2;
+    posBola = 5;
 
     pintarPeloteo(tenista1.iniciales, tenista2.iniciales, tenista1.datos_partido.posicion, tenista2.datos_partido.posicion, bolaPara, posBola);
     while (gana == NADIE) {
@@ -543,7 +541,8 @@ tTenista jugarPunto(tTenista servicio, tDatosTenista& tenista1, tDatosTenista& t
 
 tTenista jugarJuego(tTenista servicio, tDatosTenista& tenista1, tDatosTenista& tenista2) { //tTenista jugarJuego(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &tenista2){
     tTenista gana = NADIE, ganaPunto = NADIE;
-    tPuntosJuego puntos1 = NADA, puntos2 = NADA;
+    tenista1.datos_partido.puntos = NADA;
+    tenista2.datos_partido.puntos = NADA;
 
     while (gana == NADIE) {
         ganaPunto = NADIE;
@@ -652,7 +651,7 @@ int buscarIniciales(const tArrayDeTenistas& lista, string ini, const int numTeni
     int pos = -1;
     bool encontrado = false;
 
-    while (!encontrado && pos < numTenista) {
+    while (!encontrado && pos <= numTenista) {
         pos++;
         if (ini == lista[pos].iniciales) {
             encontrado = true;
@@ -668,7 +667,7 @@ int buscarIniciales(const tArrayDeTenistas& lista, string ini, const int numTeni
 void guardar(const tArrayDeTenistas& lista, const int numTenistas) {
     ofstream archivo(ARCHIVO);
     if (archivo.is_open()) {
-        for (int i = 0; i < numTenistas; i++) {
+        for (int i = 0; i <= numTenistas; i++) {
             cout << lista[numTenistas].iniciales << " ";
             cout << lista[numTenistas].habilidad << " ";
             cout << lista[numTenistas].velocidad << " ";
@@ -682,17 +681,18 @@ void guardar(const tArrayDeTenistas& lista, const int numTenistas) {
     }
 }
 
-void mostrar(const tArrayDeTenistas& listaT) {
-
-
-
+void mostrar(const tArrayDeTenistas& listaT, const int numTenista) {
+    cout << setw(5) << "INI" << setw(5) << "HAB" << setw(5) << "VEL" << setw(5) << "PG" << setw(5) << "PP" << endl;
+    for (int i = 0; i <= numTenista; i++) {
+        cout << setw(5) << listaT[i].iniciales << setw(5) << listaT[i].habilidad << setw(5) << listaT[i].velocidad << setw(5) << listaT[i].partidos_ganados << setw(5) << listaT[i].partidos_perdidos << endl;
+    }
 }
 
 void mostrarIniciales(const tArrayDeTenistas& listaT, const int numTenistas) {
     int i = 0;
 
     cout << "Iniciales de los tenistas: ";
-    for (i = 0; i < numTenistas - 1; i++) {
+    for (i = 0; i < numTenistas; i++) {
         cout << listaT[i].iniciales << " - ";
     }
     cout << listaT[numTenistas].iniciales;
@@ -704,7 +704,7 @@ void mostrarIniciales(const tArrayDeTenistas& listaT, const int numTenistas) {
 void eliminarTenista(tArrayDeTenistas& listaT, string iniciales, int& numTenistas) {
     int pos = buscarIniciales(listaT, iniciales, numTenistas);
     //empezamos con el remplazo
-    for (int i = pos; i < numTenistas - 1; i++) {
+    for (int i = pos; i <= numTenistas - 1; i++) {
         listaT[i] = listaT[i + 1];
     }
     numTenistas--;
@@ -714,45 +714,55 @@ void introducirTenista(tArrayDeTenistas& listaT, int& numTenistas) {
     bool noAlpha = false, tres;
     numTenistas++;
     cout << "Datos del tenista" << endl;
+    cout << "Introduce sus iniciales: ";
+    cin >> listaT[numTenistas].iniciales;
+    while (listaT[numTenistas].iniciales.length() != 3) {
+        cout << "Tienen que ser tres iniciales, ni mas ni menos" << endl;
         cout << "Introduce sus iniciales: ";
         cin >> listaT[numTenistas].iniciales;
-        while (listaT[numTenistas].iniciales.length() != 3) {
-            cout << "Tienen que ser tres iniciales, ni mas ni menos" << endl;
-            cout << "Introduce sus iniciales: ";
-            cin >> listaT[numTenistas].iniciales;
+    }
+    for(int i = 0; i < 3; i++) {
+        if (isnumber(listaT[i].iniciales[i])) {
+            noAlpha = true;
         }
+    }
+    while (noAlpha) {
+        noAlpha = false;
+        cout << "Introduce sus iniciales: ";
+        cin >> listaT[numTenistas].iniciales;
         for(int i = 0; i < 3; i++) {
-            if (!isalpha(listaT[i].iniciales[i])) {
+            if (isnumber(listaT[i].iniciales[i])) {
                 noAlpha = true;
             }
         }
-        while (noAlpha) {
-            noAlpha = false;
-            cout << "Introduce sus iniciales: ";
-            cin >> listaT[numTenistas].iniciales;
-            for(int i = 0; i < 3; i++) {
-                if (!isalpha(listaT[i].iniciales[i])) {
-                    noAlpha = true;
-
-                }
-            }
-            if(noAlpha) {
-                cout << "Tienen que ser tres iniciales, no puede haber números" << endl;
-            }
-
+        if(noAlpha) {
+            cout << "Tienen que ser tres iniciales, no puede haber números" << endl;
         }
+    }
 
 
     cout << "Introduzca su habilidad (1 al 3): ";
     cin >> listaT[numTenistas].habilidad;
     cout << "Introduzca su velocidad (1 al 4): ";
     cin >> listaT[numTenistas].velocidad;
+    listaT[numTenistas].partidos_ganados = 0;
+    listaT[numTenistas].partidos_perdidos = 0;
     cout << "Tenista creado con éxito";
 }
 
 tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2) {
     tTenista gana = NADIE, jugar, servi;
-    int juegos1 = 0, juegos2 = 0, servicio;
+    int servicio;
+    tenista1.datos_partido.juegos = 0;
+    tenista1.datos_partido.puntos = NADA;
+    tenista1.datos_partido.posicion = 4;
+    tenista1.datos_partido.golpes_ganadores = 0;
+    inicializarConteos(tenista1.datos_partido.golpeos);
+    tenista2.datos_partido.juegos = 0;
+    tenista2.datos_partido.puntos = NADA;
+    tenista2.datos_partido.posicion = 4;
+    tenista2.datos_partido.golpes_ganadores = 0;
+    inicializarConteos(tenista2.datos_partido.golpeos);
 
     while (gana == NADIE) {         //Mientras no llegue ninguno a 2 set se jugarJuego
 
@@ -766,15 +776,15 @@ tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2) {
 
         jugar = jugarJuego(servi, tenista1, tenista2);
         if (jugar == TENISTA1) {
-            juegos1++;
+            tenista1.datos_partido.juegos++;
         }
         else if (jugar == TENISTA2) {
-            juegos2++;
+            tenista2.datos_partido.juegos++;
         }
-        if (juegos1 == 2) {
+        if (tenista1.datos_partido.juegos == 2) {
             gana = TENISTA1;
         }
-        else if (juegos2 == 2) {
+        else if (tenista2.datos_partido.juegos == 2) {
             gana = TENISTA2;
         }
     }

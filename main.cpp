@@ -60,18 +60,16 @@ int cargar(tArrayDeTenistas& lista); // usamos una funcion int en vez de un void
 int buscarIniciales(const tArrayDeTenistas& lista, string ini, const int numTenista); //Hecha sin comprobar
 void guardar(const tArrayDeTenistas& lista, const int numTenista);
 void mostrar(const tArrayDeTenistas& lista);
-void mostrarIniciales(const tArrayDeTenistas& listaT);
-int buscarIniciales(const tArrayDeTenistas& listaT, string ini);
-void eliminarTenista(tArrayDeTenistas& listaT, string iniciales);
-void introducirTenista(tArrayDeTenistas& listaT);
+void mostrarIniciales(const tArrayDeTenistas& listaT, const int numTenistas);
+void eliminarTenista(tArrayDeTenistas& listaT, string iniciales, int& numTenistas);
+void introducirTenista(tArrayDeTenistas& listaT, int& numTenistas);
 tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2);
 void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int indT4);
 void seleccionarTop4(const tArrayDeTenistas& listaT, int& indT1, int& indT2, int& indT3, int& indT4);
 
 int main() {
-    string nombre1, nombre2, marcador1, marcador2;// variables que probablemente se eliminen porque ahora se usa un array
-    int hab1, hab2, vel1, vel2, juegos1 = 0, juegos2 = 0; // variables que probablemente se eliminen porque ahora se usa un array
-    int golpes_ganadores1 = 0, golpes_ganadores2 = 0;// variables que probablementye se eliminen porque ahora se usa un array
+    string iniciales;
+    int indT1, indT2, indT3, indT4;
     tArrayDeTenistas lista;
     int opcion, numTenistas = cargar(lista);
     tDatosTenista tenista1, tenista2;
@@ -87,54 +85,135 @@ int main() {
     opcion = menu();
     while (opcion != 0) {
         switch (opcion) {
-        case 1:
 
-            break;
-        case 2:
-            if (numTenistas < DIM_ARRAY_TENISTAS) {
-                introducirTenista(lista[numTenistas].iniciales, lista[numTenistas].habilidad,
-                    lista[numTenistas].velocidad);
-                numTenistas++;
-            }
-            else {
-                cout << "ERROR : No se pueden añadir más tenistas, memoria llena" << endl;
-            }
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-        case 5:
-            break;
-        case 6:
-            break;
+            case 1:
+                mostrar(lista);
+                break;
+            case 2:
+                if (numTenistas < DIM_ARRAY_TENISTAS) {
+                    introducirTenista(lista, numTenistas);
+                }
+                else {
+                    cout << "ERROR : No se pueden añadir más tenistas, memoria llena" << endl;
+                }
+                break;
+            case 3:
+
+                mostrarIniciales(lista, numTenistas);
+                cout << "Introduzca las iniciales del  tenista desea eliminar:";
+
+                cin >> iniciales;
+                eliminarTenista(lista, iniciales, numTenistas);
+                break;
+
+            case 4:
+                mostrarIniciales(lista, numTenistas);
+                cout << "Introduzca las iniciales del tenista 1:";
+                cin >> tenista1.iniciales;
+                while (buscarIniciales(lista, tenista1.iniciales, numTenistas) == -1){
+                    cout << "Ese tenista no existe." << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduzca las iniciales del tenista 1:";
+                    cin >> tenista1.iniciales;
+                }
+                mostrarIniciales(lista, numTenistas);
+                cout << "Introduzca las iniciales del tenista 2:";
+                cin >> tenista2.iniciales;
+                while (buscarIniciales(lista, tenista2.iniciales, numTenistas) == -1){
+                    cout << "Ese tenista no existe." << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduzca las iniciales del tenista 2:";
+                    cin >> tenista2.iniciales;
+                }
+                while (tenista2.iniciales == tenista1.iniciales){
+                    cout << "Tenista repetido." << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduzca las iniciales del tenista 2:";
+                    cin >> tenista2.iniciales;
+                }
+                jugarPartido(tenista1, tenista2);
+                break;
+            case 5:
+
+
+                //
+                //T1
+                //
+                mostrarIniciales(lista, numTenistas);
+                cout << "Introduce las iniciales del tenista 1:" << iniciales;
+                indT1 = buscarIniciales(lista, iniciales, numTenistas);
+                while (indT1 == -1){
+                    cout << "Ese tenista no existe" << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduce las iniciales del tenista 1:" << iniciales;
+                    indT1 = buscarIniciales(lista, iniciales, numTenistas);
+                }
+                //
+                //T2
+                //
+                mostrarIniciales(lista, numTenistas);
+                cout << "Introduce las iniciales del tenista 2:" << iniciales;
+                indT2 = buscarIniciales(lista, iniciales, numTenistas);
+                while (indT2 == -1){
+                    cout << "Ese tenista no existe" << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduce las iniciales del tenista 2:" << iniciales;
+                    indT1 = buscarIniciales(lista, iniciales, numTenistas);
+                }
+                while(indT2 == indT1){
+                    cout << "Ese tenista esta repetido, elija otro" << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduce las iniciales del tenista 2:" << iniciales;
+                    indT1 = buscarIniciales(lista, iniciales, numTenistas);
+                }
+                //
+                //T3
+                //
+                mostrarIniciales(lista, numTenistas);
+                cout << "Introduce las iniciales del tenista 3:" << iniciales;
+                indT3 = buscarIniciales(lista, iniciales, numTenistas);
+                while (indT3 == -1){
+                    cout << "Ese tenista no existe" << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduce las iniciales del tenista 3:" << iniciales;
+                    indT1 = buscarIniciales(lista, iniciales, numTenistas);
+                }
+                while(indT3 == indT1 || indT3 == indT2){
+                    cout << "Ese tenista esta repetido, elija otro" << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduce las iniciales del tenista 3:" << iniciales;
+                    indT1 = buscarIniciales(lista, iniciales, numTenistas);
+                }
+                //
+                //T4
+                //
+                mostrarIniciales(lista, numTenistas);
+                cout << "Introduce las iniciales del tenista 4:" << iniciales;
+                indT4 = buscarIniciales(lista, iniciales, numTenistas);
+                while (indT4 == -1){
+                    cout << "Ese tenista no existe" << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduce las iniciales del tenista 4:" << iniciales;
+                    indT1 = buscarIniciales(lista, iniciales, numTenistas);
+                }
+                while(indT4 == indT1 || indT4 == indT2 || indT4 == indT3){
+                    cout << "Ese tenista esta repetido, elija otro" << endl;
+                    mostrarIniciales(lista, numTenistas);
+                    cout << "Introduce las iniciales del tenista 4:" << iniciales;
+                    indT1 = buscarIniciales(lista, iniciales, numTenistas);
+                }
+                jugarTorneo(lista, indT1, indT2, indT3, indT4);
+                break;
+            case 6:
+                int indT1, indT2, indT3, indT4;
+                seleccionarTop4(lista, indT1, indT2, indT3, indT4);
+                jugarTorneo(lista, indT1, indT2, indT3, indT4);
+                break;
         }
         opcion = menu();
     }
     cout << "Programa finalizado" << endl;
 
-    while (ganador_set == NADIE) {
-        tTenista ganadorPunto = NADIE;
-        cout << "Servicio para: " << servicio_para;
-        ganadorPunto = jugarPunto(servicio_para, tenista1, tenista2);
-        if (ganadorPunto == TENISTA1) {
-            juegos1++;
-            cout << nombre1 << "Ha ganado el punto." << endl;
-        }
-        else if (ganadorPunto == TENISTA2) {
-            juegos2++;
-            cout << nombre2 << "Ha ganado el punto." << endl;
-        }
-        if (juegos1 == JUEGOS_SET || juegos2 == JUEGOS_SET) {
-            ganador_set = ganadorPunto;
-        }
-        else {
-            servicio_para = tTenista(servicio_para % 2 + 1);
-        }
-    }
-    cout << ganador_set << "ha ganado el set!!" << endl;
-    mostrarEstadisticas(TENISTA1, golpeos1, golpes_ganadores1, nombre1);
-    mostrarEstadisticas(TENISTA2, golpeos2, golpes_ganadores2, nombre2);
     return 0;
 }
 
@@ -218,17 +297,7 @@ string puntosAstring(tPuntosJuego puntuacion) {
     return res;
 }
 
-void introducirTenista(string& iniciales, int& habilidad, int& velocidad) {
 
-    cout << "Datos del tenista" << endl;
-    cout << "Introduce sus iniciales: ";
-    cin >> iniciales;
-    cout << "Introduzca su habilidad (1 al 3): ";
-    cin >> habilidad;
-    cout << "Introduzca su velocidad (1 al 4): ";
-    cin >> velocidad;
-    cout << "Tenista creado con éxito";
-}
 
 void mostrarEstadisticas(tTenista tenista, tConteoGolpes golpes, int aciertos, string nombre) {
     int a = 0;
@@ -347,7 +416,7 @@ void pintarPeloteo(string nombre1, string nombre2, int pos_t1, int pos_t2, tTeni
     cout << endl;
     cout << "  ";
 
-    while (cont != LARGO_PISTA) {                                   //Campo tenista 1 
+    while (cont != LARGO_PISTA) {                                   //Campo tenista 1
         for (v = 1; v < ANCHO_PISTA + 4; v++) {
             if (v != pos_bola) {
                 cout << "| ";
@@ -417,12 +486,12 @@ tTenista lance(tTenista bola_para, tDatosTenista& tenista_golpea, tDatosTenista&
     int i = 0;
 
     cout << tenista_golpea.iniciales << "Golpea la bola." << endl;
-    pos_bola = golpeoBola(pos_bola, tenista_golpea.habilidad);                     
-    
+    pos_bola = golpeoBola(pos_bola, tenista_golpea.habilidad);
+
     if (1 <= pos_bola && pos_bola <= 7) {
         tenista_recibe.datos_partido.posicion = correTen(tenista_recibe.datos_partido.posicion, tenista_recibe.velocidad, pos_bola);
         if (pos_bola != tenista_recibe.datos_partido.posicion) {                 //No llega a la pelota, punto
-            if (bola_para == TENISTA1) {           
+            if (bola_para == TENISTA1) {
                 gana = TENISTA1;
                 tenista_golpea.datos_partido.golpes_ganadores++;
             }
@@ -470,7 +539,7 @@ tTenista jugarPunto(tTenista servicio, tDatosTenista& tenista1, tDatosTenista& t
     }
 
     return gana;
-} 
+}
 
 tTenista jugarJuego(tTenista servicio, tDatosTenista& tenista1, tDatosTenista& tenista2) { //tTenista jugarJuego(tTenista servicio, tDatosTenista &tenista1, tDatosTenista &tenista2){
     tTenista gana = NADIE, ganaPunto = NADIE;
@@ -478,7 +547,7 @@ tTenista jugarJuego(tTenista servicio, tDatosTenista& tenista1, tDatosTenista& t
 
     while (gana == NADIE) {
         ganaPunto = NADIE;
-        pintarMarcador(tenista1.iniciales, tenista2.iniciales, tenista1.datos_partido, tenista2.datos_partido, servicio);        
+        pintarMarcador(tenista1.iniciales, tenista2.iniciales, tenista1.datos_partido, tenista2.datos_partido, servicio);
         ganaPunto = jugarPunto(servicio, tenista1, tenista2);
         gana = actualizarMarcador(ganaPunto, tenista1.datos_partido, tenista2.datos_partido);
     }
@@ -614,37 +683,71 @@ void guardar(const tArrayDeTenistas& lista, const int numTenistas) {
 }
 
 void mostrar(const tArrayDeTenistas& listaT) {
-    
+
+
 
 }
 
-void mostrarIniciales(const tArrayDeTenistas& listaT) {
+void mostrarIniciales(const tArrayDeTenistas& listaT, const int numTenistas) {
     int i = 0;
 
-    cout << "INI" << endl;
-    for (i = 0; i < DIM_ARRAY_TENISTAS; i++) {
-        cout << listaT[i].iniciales << endl;
+    cout << "Iniciales de los tenistas: ";
+    for (i = 0; i < numTenistas - 1; i++) {
+        cout << listaT[i].iniciales << " - ";
     }
+    cout << listaT[numTenistas].iniciales;
+
 }
 
-int buscarIniciales(const tArrayDeTenistas& listaT, string ini) {
-    int pos = -1, i = 0;
 
-    for (i = 0; i < DIM_ARRAY_TENISTAS; i++) {
-        if (listaT[i].iniciales == ini) {
-            pos = i;
+
+void eliminarTenista(tArrayDeTenistas& listaT, string iniciales, int& numTenistas) {
+    int pos = buscarIniciales(listaT, iniciales, numTenistas);
+    //empezamos con el remplazo
+    for (int i = pos; i < numTenistas - 1; i++) {
+        listaT[i] = listaT[i + 1];
+    }
+    numTenistas--;
+}
+
+void introducirTenista(tArrayDeTenistas& listaT, int& numTenistas) {
+    bool noAlpha = false, tres;
+    numTenistas++;
+    cout << "Datos del tenista" << endl;
+        cout << "Introduce sus iniciales: ";
+        cin >> listaT[numTenistas].iniciales;
+        while (listaT[numTenistas].iniciales.length() != 3) {
+            cout << "Tienen que ser tres iniciales, ni mas ni menos" << endl;
+            cout << "Introduce sus iniciales: ";
+            cin >> listaT[numTenistas].iniciales;
         }
-    }
+        for(int i = 0; i < 3; i++) {
+            if (!isalpha(listaT[i].iniciales[i])) {
+                noAlpha = true;
+            }
+        }
+        while (noAlpha) {
+            noAlpha = false;
+            cout << "Introduce sus iniciales: ";
+            cin >> listaT[numTenistas].iniciales;
+            for(int i = 0; i < 3; i++) {
+                if (!isalpha(listaT[i].iniciales[i])) {
+                    noAlpha = true;
 
-    return pos;
-}
+                }
+            }
+            if(noAlpha) {
+                cout << "Tienen que ser tres iniciales, no puede haber números" << endl;
+            }
 
-void eliminarTenista(tArrayDeTenistas& listaT, string iniciales) {
+        }
 
-}
 
-void introducirTenista(tArrayDeTenistas& listaT) {
-
+    cout << "Introduzca su habilidad (1 al 3): ";
+    cin >> listaT[numTenistas].habilidad;
+    cout << "Introduzca su velocidad (1 al 4): ";
+    cin >> listaT[numTenistas].velocidad;
+    cout << "Tenista creado con éxito";
 }
 
 tTenista jugarPartido(tDatosTenista& tenista1, tDatosTenista& tenista2) {
@@ -692,7 +795,7 @@ void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int 
     tDatosTenista tenista1 = listaT[indT1], tenista2 = listaT[indT2], tenista3 = listaT[indT3], tenista4 = listaT[indT4];
     tTenista semi1 = NADIE, semi2 = NADIE, final = NADIE;
 
-    //Semis 
+    //Semis
     cout << "Semifinal 1: " << tenista1.iniciales << " vs " << tenista4.iniciales << endl;
     cout << "Semifinal 2: " << tenista2.iniciales << " vs " << tenista3.iniciales << endl;
     semi1 = jugarPartido(tenista1, tenista4);
@@ -768,7 +871,7 @@ void jugarTorneo(tArrayDeTenistas& listaT, int indT1, int indT2, int indT3, int 
 
 void seleccionarTop4(const tArrayDeTenistas& listaT, int& indT1, int& indT2, int& indT3, int& indT4) {
     int i = 0, j = 0, k = 0, aux[DIM_ARRAY_TENISTAS + 1], m, n1, n2, n3, n4;
-    
+
     for (i = 0; i < DIM_ARRAY_TENISTAS; i++) {      //Metemos los valores en el array auxiliar
         aux[i] = listaT[i].partidos_ganados;
     }
@@ -803,3 +906,4 @@ void seleccionarTop4(const tArrayDeTenistas& listaT, int& indT1, int& indT2, int
     cout << "3. " << listaT[indT3].iniciales << " con " << n3 << " victorias." << endl;
     cout << "4. " << listaT[indT4].iniciales << " con " << n4 << " victorias." << endl;
 }
+
